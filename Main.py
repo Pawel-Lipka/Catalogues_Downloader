@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import Select
+import time
 caps = DesiredCapabilities().CHROME
 PATH = r'C:\Users\plipka\Desktop\AutoFrigo\Catalogues_Downloader\chromedriver.exe'
 
@@ -14,9 +15,10 @@ class Cataloge_downloader():
 
     def __init__(self,driver_patch):
         caps["pageLoadStrategy"] = "eager"
-        self.driver = webdriver.Chrome(driver_patch,desired_capabilities=caps,)
+        self.driver = webdriver.Chrome(driver_patch,desired_capabilities=caps)
         self.user = base64.b64decode(paz.uz).decode('utf-8')
         self.pas = base64.b64decode(paz.pas).decode('utf-8')
+
     def sn_input(self):
         try:
             sn = str(input('Type cooler sn number: '))
@@ -48,8 +50,45 @@ class Cataloge_downloader():
         select.select_by_value('RecordToMSExcel')
         self.driver.find_element_by_id('submitexport').click()
 
+    def frigo_shop_catalogue_downloader_by_serial(self):
+        sn = "RO2372586258"
+        self.driver.get("https://parts.frigoserve.com/shop/app?__bk_&__windowid=CCS428213376&__rid=RIH1634113424794#'2V10C9D9248E4C6405")
+        element = WebDriverWait(self.driver,10).until(
+            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[2]/div/form/div/div/div/div[2]/div/div/div/div/div[2]/div/button'))
+        )
+        element.click()
+        self.driver.find_element_by_xpath("/html/body/div[1]/form/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/div/div/div/div[5]/div/input").send_keys("PL")
+        self.driver.find_element_by_xpath('/html/body/div[1]/form/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/div/div/div/div[7]/div/input').send_keys("PLFRGHULU$%^")
+        self.driver.find_element_by_xpath("/html/body/div[1]/form/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/div/div/div/div[8]/div/button").click()
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '/html/body/div[1]/div[1]/div[4]/form/div/div/div[3]/div/div/div/div[2]/div/div/div/div/div/button'))
+                 )
+        element.click()
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CLASS_NAME,"guiwindow_child_container"))
+                )
+        element.click()
+        time.sleep(10)
+        self.driver.switch_to_frame(self.driver.find_element_by_class_name('guipanel'))
+
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH,"/html/body/div[1]/div[2]/div[4]/form/div[2]/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/table/tbody/tr[2]/td/div/span/div/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div/input"))
+        )
+        element.send_keys(sn)
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CLASS_NAME,
+                 'guilabel'))
+        )
+        element.click()
+
 
 a = Cataloge_downloader(PATH)
-a.frs_russia_log_in()
-a.kpi_download()
+a.frigo_shop_catalogue_downloader_by_serial()
+
+
+
 
