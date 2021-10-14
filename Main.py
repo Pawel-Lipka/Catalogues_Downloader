@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver import ActionChains
 import time
 caps = DesiredCapabilities().CHROME
 PATH = r'C:\Users\plipka\Desktop\AutoFrigo\Catalogues_Downloader\chromedriver.exe'
@@ -18,7 +19,7 @@ class Cataloge_downloader():
         self.driver = webdriver.Chrome(driver_patch,desired_capabilities=caps)
         self.user = base64.b64decode(paz.uz).decode('utf-8')
         self.pas = base64.b64decode(paz.pas).decode('utf-8')
-
+        self.action = ActionChains(self.driver)
     def sn_input(self):
         try:
             sn = str(input('Type cooler sn number: '))
@@ -70,20 +71,23 @@ class Cataloge_downloader():
                 (By.CLASS_NAME,"guiwindow_child_container"))
                 )
         element.click()
-        time.sleep(10)
-        self.driver.switch_to_frame(self.driver.find_element_by_class_name('guipanel'))
+        time.sleep(5)
+        self.driver.switch_to.frame('shopMain')
 
         element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (By.XPATH,"/html/body/div[1]/div[2]/div[4]/form/div[2]/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/table/tbody/tr[2]/td/div/span/div/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div/input"))
         )
         element.send_keys(sn)
+        element.send_keys(Keys.RETURN)
+        time.sleep(5)
         element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
-                (By.CLASS_NAME,
-                 'guilabel'))
+                (By.XPATH,
+                 '/html/body/div[1]/div[2]/div[4]/form/div[2]/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/table/tbody/tr[2]/td/div/span/div/div/div[3]/div/div/div/div/div/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div/div[2]/div/div/div/div/div[1]/div/div/div/div[3]/table/tr/td[1]/div/div'))
         )
         element.click()
+        self.action.double_click(element).perform()
 
 
 a = Cataloge_downloader(PATH)
