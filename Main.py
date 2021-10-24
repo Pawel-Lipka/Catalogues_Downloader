@@ -9,14 +9,14 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver import ActionChains
 import time
-caps = DesiredCapabilities().CHROME
-PATH = r'C:\Users\plipka\Desktop\AutoFrigo\Catalogues_Downloader\chromedriver.exe'
+caps = DesiredCapabilities().CHROME # sets whether or not to wait for the page to load
+PATH = r'C:\Users\plipka\Desktop\AutoFrigo\Catalogues_Downloader\chromedriver.exe' # chromedriver path
 
 class Cataloge_downloader():
 
     def __init__(self,driver_patch):
-        caps["pageLoadStrategy"] = "eager"
-        self.driver = webdriver.Chrome(driver_patch,desired_capabilities=caps)
+        caps["pageLoadStrategy"] = "eager" # wait to page be interactive #disable
+        self.driver = webdriver.Chrome(driver_patch)
         self.user = base64.b64decode(paz.uz).decode('utf-8')
         self.pas = base64.b64decode(paz.pas).decode('utf-8')
         self.action = ActionChains(self.driver)
@@ -34,6 +34,25 @@ class Cataloge_downloader():
         self.driver.find_element_by_id('Password').send_keys('vlad00')
         self.driver.find_element_by_id('SubmitBtn').click()
 
+    def frigo_shop_log_in(self):
+        self.driver.get("https://parts.frigoserve.com/shop/app?__bk_&__windowid=CCS428213376&__rid=RIH1634113424794#'2V10C9D9248E4C6405")
+        self.driver.implicitly_wait(6)
+
+
+
+        login_password = self.driver.find_elements_by_class_name('guitextfield')#find login and password input windows
+        login_password[0].send_keys('PL')#input login
+        login_password[1].send_keys('PLFRGHULU$%^')#input password
+
+        cookies_ok_button = self.driver.find_element_by_class_name(
+            'guiwindow_child_container')  # find lower cookie politics bar
+        cookies_ok_button.find_element_by_class_name('guibutton_enabled').click()  # click ok on cookie bar
+
+        login_password[1].send_keys(Keys.RETURN)#hit enter keypad
+
+        select_organisation_window = self.driver.find_element_by_class_name('guilayoutflow_container')#find upper button class on pop up window
+        select_organisation_window.find_element_by_class_name('guibutton_enabled')#find ok button on pop up window
+        select_organisation_window.click()#click ok button on pop up window
 
     def kpi_download(self):
         self.driver.execute_script('''window.open("http://192.168.44.49/reportengine/rengine.aspx?ReportID=FG.SLS401&action=page");''')
@@ -53,44 +72,48 @@ class Cataloge_downloader():
 
     def frigo_shop_catalogue_downloader_by_serial(self):
         sn = "RO2372586258"
-        self.driver.get("https://parts.frigoserve.com/shop/app?__bk_&__windowid=CCS428213376&__rid=RIH1634113424794#'2V10C9D9248E4C6405")
-        element = WebDriverWait(self.driver,10).until(
-            EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[2]/div/form/div/div/div/div[2]/div/div/div/div/div[2]/div/button'))
-        )
-        element.click()
-        self.driver.find_element_by_xpath("/html/body/div[1]/form/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/div/div/div/div[5]/div/input").send_keys("PL")
-        self.driver.find_element_by_xpath('/html/body/div[1]/form/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/div/div/div/div[7]/div/input').send_keys("PLFRGHULU$%^")
-        self.driver.find_element_by_xpath("/html/body/div[1]/form/div/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/div/div/div/div[8]/div/button").click()
-        element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH, '/html/body/div[1]/div[1]/div[4]/form/div/div/div[3]/div/div/div/div[2]/div/div/div/div/div/button'))
-                 )
-        element.click()
-        element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.CLASS_NAME,"guiwindow_child_container"))
-                )
-        element.click()
-        time.sleep(5)
         self.driver.switch_to.frame('shopMain')
+        search_by_serial = self.driver.find_element_by_class_name('guitextfield')#first guitextfield is serial input field
+        search_by_serial.send_keys(sn) #send serial number
+        search_by_serial.send_keys(Keys.RETURN) #hit enter to confirm
 
-        element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH,"/html/body/div[1]/div[2]/div[4]/form/div[2]/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/table/tbody/tr[2]/td/div/span/div/div/div[1]/div/div/div/div[5]/div/div/div/div/div[1]/div/input"))
+
+        search_results = self.driver.find_element_by_class_name('guitable_content_table')#set driver at results lists
+        first_result = search_results.find_element_by_class_name('guilabel')#find first element in list
+        self.action.double_click(first_result).perform()#press first search result two times
+
+        #TO DO: poczekac az drugi guibutton sie zaladuje
+        time.sleep(5)# wait until cookie button presenc
+        cookies_ok_button = WebDriverWait(self.driver,10).until(
+            EC.element_to_be_clickable((By.CLASS_NAME,'guibutton_enabled')) #find ok cookie button
         )
-        element.send_keys(sn)
-        element.send_keys(Keys.RETURN)
-        time.sleep(5)
-        element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH,
-                 '/html/body/div[1]/div[2]/div[4]/form/div[2]/div/div[3]/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div/div/table/tbody/tr[2]/td/div/span/div/div/div[3]/div/div/div/div/div/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div/div[2]/div/div/div/div/div[1]/div/div/div/div[3]/table/tr/td[1]/div/div'))
-        )
-        element.click()
-        self.action.double_click(element).perform()
+        cookies_ok_button.click() #press ok on cookie button
+
+        print_button = self.driver.find_element_by_css_selector('img[src="WEB-RES/resource/resource?id=class_image_de.docware.framework.modules.gui.a.c_defaultimages_flat_imgDesignGuiViewerPrinter_w.png"]') # find print/download button
+        print_button.click() #click on print button
+
+        print_window = WebDriverWait(self.driver,10).until(
+            EC.presence_of_element_located((By.CLASS_NAME,'guiwindow_child_content'))
+            ) # wait until print window are pop up
+        print_window = print_window.find_elements_by_css_selector('button[class="guibutton_linkenabled"]') #find two buttons on 'print window'
+        print_window[1].click() # click secound button on 'print window'
+
+        save_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH,"//span[.='Save']")) #wait until save buton can be click
+            )
+
+        save_button.click() #click save button
+
+
+
+
+
+
 
 
 a = Cataloge_downloader(PATH)
+
+a.frigo_shop_log_in()
 a.frigo_shop_catalogue_downloader_by_serial()
 
 
