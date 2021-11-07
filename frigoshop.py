@@ -6,11 +6,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
-
+from file_handler import File_handler
 class Frigoshop():
 
 
-    def __init__(self,driver_path=const.PATH,tear_down=False,page_load_strategy = 'eager',sn='RO2372586258'):
+    def __init__(self,driver_path=const.PATH,tear_down=False,page_load_strategy = 'eager',sn='RO5811948533'):
         caps = DesiredCapabilities().CHROME
         caps['pageLoadStrategy'] = page_load_strategy
         self.driver = webdriver.Chrome(driver_path,desired_capabilities=caps)
@@ -78,3 +78,11 @@ class Frigoshop():
         )
 
         save_button.click()  # click save button
+    def log_out(self):
+        pass
+
+    def rename_file(self):
+        file_name=File_handler.getDownLoadedFileName(self,30,self.driver)
+        File_handler.file_rename(self,file_name,self.sn)
+
+

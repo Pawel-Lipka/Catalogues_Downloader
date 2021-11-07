@@ -1,10 +1,12 @@
-import  constants as const
+import time
+
+import constants as const
 import frigoshop
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from file_handler import File_handler as fh #TODO: why its working only with as keyword
 class Frs(frigoshop.Frigoshop):
 
 
@@ -31,7 +33,7 @@ class Frs(frigoshop.Frigoshop):
         submit_button.click()
 
     def click_print_button(self):
-        print_button = WebDriverWait(self.driver, 30).until(
+        print_button = WebDriverWait(self.driver, 3000).until(
             EC.presence_of_element_located((By.CSS_SELECTOR,
             "#CrystalReportViewer1 > tbody > tr > td > div > div:nth-child(1) > table > tbody > tr > td:nth-child(4) > img"))
         )
@@ -51,6 +53,11 @@ class Frs(frigoshop.Frigoshop):
         #only for export window
         ok_button = self.driver.find_element_by_id('submitexport')
         ok_button.click()
+
+    def download_and_rename1(self):
+        file_name = fh.getDownLoadedFileName(self,30,self.driver)
+        fh.file_rename(self,file_name,"KPI")
+
 
 
 

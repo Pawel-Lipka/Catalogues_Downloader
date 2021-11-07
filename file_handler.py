@@ -20,10 +20,28 @@ class File_handler():
                 # check if downloadPercentage is 100 (otherwise the script will keep waiting)
                 if downloadPercentage == 100:
                     # return the file name once the download is completed
-                    return driver.execute_script(
+                    self.file_name = driver.execute_script(
                         "return document.querySelector('downloads-manager').shadowRoot.querySelector('#downloadsList downloads-item').shadowRoot.querySelector('div#content  #file-link').text")
+                    return self.file_name
             except:
                 pass
             time.sleep(1)
             if time.time() > endTime:
                 break
+
+
+
+    def file_rename(self,old_file_name,new_file_name,path='C:\\Users\\plipka\\Downloads\\'):
+        try:
+            os.rename(path+old_file_name,path+new_file_name+old_file_name[-4:])
+        except FileExistsError:
+            os.remove(path+new_file_name+old_file_name[-4:])
+            os.rename(path + old_file_name, path + new_file_name + old_file_name[-4:])
+        except TypeError:
+            return "can't rename - file don't exist"
+
+
+
+
+
+
