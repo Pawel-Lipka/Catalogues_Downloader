@@ -1,8 +1,0 @@
-name: frigo
-channels:
-  - defaults
-dependencies:
-  - python=3.9
-  - pandas=1.3.3
-  - selenium=3.141.0
-prefix: C:\Users\plipka\Anaconda3\envs\frigo

@@ -1,4 +1,3 @@
-import time
 
 import constants as const
 import frigoshop
@@ -6,7 +5,6 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from file_handler import File_handler as fh #TODO: why its working only with as keyword
 class Frs(frigoshop.Frigoshop):
 
 
@@ -24,10 +22,31 @@ class Frs(frigoshop.Frigoshop):
         self.driver.execute_script(
             '''window.open("http://192.168.44.49/reportengine/rengine.aspx?ReportID=FG.SLS401&action=page");''')
         self.driver.switch_to.window(self.driver.window_handles[1])
+    def open_stock_download_page(self):
+        self.driver.execute_script(
+            '''window.open("http://192.168.44.49/reportengine/rengine.aspx?ReportID=FG.WRH101.CSR&action=page");''')
+        self.driver.switch_to.window(self.driver.window_handles[1])
+    def open_bom_download_page(self):
+        self.driver.execute_script(
+            '''window.open("http://192.168.44.49/reportengine/rengine.aspx?ReportID=FG.CSR902&action=page");''')
+        self.driver.switch_to.window(self.driver.window_handles[1])
 
     def fill_in_kpi_download_form(self,warehouse_number='025SCH'):
         from_warehouse_textbox = self.driver.find_element_by_id('WarehouseFrom')
         from_warehouse_textbox.send_keys(warehouse_number)
+    def fill_in_bom_download_form(self,serial_number):
+        serial_number_from = self.driver.find_element_by_id("SERIALFROM")
+        serial_number_from.clear()
+        serial_number_from.send_keys(serial_number)
+        serial_number_to = self.driver.find_element_by_id("SERIALTO")
+        serial_number_to.clear()
+        serial_number_to.send_keys(serial_number)
+        production_date_from = self.driver.find_element_by_id("DATEFROM")
+        production_date_from.clear()
+        production_date_from.send_keys("01/01/2010")
+        production_date_to = self.driver.find_element_by_id("DATETO")
+        production_date_to.clear()
+        production_date_to.send_keys("01/01/2022")
     def click_submit_button(self):
         submit_button = self.driver.find_element_by_name("_ctl0")
         submit_button.click()
@@ -54,9 +73,8 @@ class Frs(frigoshop.Frigoshop):
         ok_button = self.driver.find_element_by_id('submitexport')
         ok_button.click()
 
-    def download_and_rename1(self):
-        file_name = fh.getDownLoadedFileName(self,30,self.driver)
-        fh.file_rename(self,file_name,"KPI")
+    def switch_tabs(self,window_number):
+        self.driver.switch_to_window(self.driver.window_handles[window_number])
 
 
 

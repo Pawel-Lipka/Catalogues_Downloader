@@ -38,6 +38,7 @@ class File_handler():
             os.remove(path+new_file_name+old_file_name[-4:])
             os.rename(path + old_file_name, path + new_file_name + old_file_name[-4:])
         except TypeError:
+            print("can't rename - file don't exist")
             return "can't rename - file don't exist"
 
 

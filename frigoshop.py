@@ -1,3 +1,4 @@
+import time
 import constants as const
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -7,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
 from file_handler import File_handler
-class Frigoshop():
+class Frigoshop(File_handler):
 
 
     def __init__(self,driver_path=const.PATH,tear_down=False,page_load_strategy = 'eager',sn='RO5811948533'):
@@ -16,7 +17,7 @@ class Frigoshop():
         self.driver = webdriver.Chrome(driver_path,desired_capabilities=caps)
         self.tear_down = tear_down
         self.driver.implicitly_wait(10)
-        self.driver.maximize_window()
+        self.driver.minimize_window()
         self.sn = sn
         self.action = ActionChains(self.driver)
 
@@ -43,11 +44,13 @@ class Frigoshop():
         )
         login_password_fields[0].send_keys(user)
         login_password_fields[1].send_keys(password)
+        time.sleep(2)
         login_password_fields[1].send_keys(Keys.RETURN)
 
 
     def switch_to_select_device_frame(self):
-        self.driver.switch_to.frame('shopMain')
+        WebDriverWait(self.driver,10).until(EC.frame_to_be_available_and_switch_to_it('shopMain'))
+
 
     def serial_number_input(self,):
         search_field = self.driver.find_element_by_class_name('guitextfield')
@@ -78,11 +81,22 @@ class Frigoshop():
         )
 
         save_button.click()  # click save button
-    def log_out(self):
-        pass
 
-    def rename_file(self):
-        file_name=File_handler.getDownLoadedFileName(self,30,self.driver)
-        File_handler.file_rename(self,file_name,self.sn)
+    def log_out(self):
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        log_out_button = self.driver.find_element_by_xpath("//span[.='Log out']")
+        log_out_button.click()
+        yes_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[.='Yes']"))  # wait until yes button can be click
+        )
+        yes_button.click()
+    def get_file_name(self):
+        file_name = File_handler.getDownLoadedFileName(self,120,self.driver)
+        return file_name
+
+    def rename_file(self,file_name,new_name):
+        File_handler.file_rename(self,file_name,new_name)
+
+
 
 
