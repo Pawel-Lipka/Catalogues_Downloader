@@ -1,6 +1,7 @@
 import time
 import constants as const
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
@@ -14,7 +15,7 @@ class Frigoshop(File_handler):
     def __init__(self,driver_path=const.PATH,tear_down=False,page_load_strategy = 'eager',sn='RO5811948533'):
         caps = DesiredCapabilities().CHROME
         caps['pageLoadStrategy'] = page_load_strategy
-        self.driver = webdriver.Chrome(driver_path,desired_capabilities=caps)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(),desired_capabilities=caps)
         self.tear_down = tear_down
         self.driver.implicitly_wait(10)
         self.driver.minimize_window()
@@ -39,6 +40,7 @@ class Frigoshop(File_handler):
 
 
     def log_in_to_frigoshop(self,user=const.USER_FRG_SHOP,password=const.PASSSWORD_FRG_SHOP):
+        time.sleep(2)
         login_password_fields =  self.driver.find_elements_by_class_name(
             'guitextfield'
         )
@@ -91,7 +93,7 @@ class Frigoshop(File_handler):
         )
         yes_button.click()
     def get_file_name(self):
-        file_name = File_handler.getDownLoadedFileName(self,120,self.driver)
+        file_name = File_handler.getDownLoadedFileName(self,220,self.driver)
         return file_name
 
     def rename_file(self,file_name,new_name):

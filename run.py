@@ -1,3 +1,4 @@
+#!.\venv\Scripts\python.exe
 from frigoshop import Frigoshop
 from frs import Frs
 from selenium.common.exceptions import NoSuchWindowException,NoSuchElementException,TimeoutException
@@ -34,14 +35,13 @@ class Run:
             bot.load_frs_ro_page()
             bot.log_in()
             bot.open_kpi_download_page()
-            bot.fill_in_kpi_download_form()
             bot.click_submit_button()
             bot.click_print_button()
             bot.switch_to_export_report_window()
             bot.choose_export_type()
             bot.click_ok_button()
             kpi_file_name = bot.get_file_name()
-            bot.rename_file(kpi_file_name,'KPI')
+            bot.rename_file(kpi_file_name,'Otwarte zamówienia')
 
     def run_stock(self):
         with Frs(tear_down=True) as bot:
@@ -54,7 +54,8 @@ class Run:
             bot.choose_export_type()
             bot.click_ok_button()
             stock_file_name = bot.get_file_name()
-            bot.rename_file(stock_file_name,'Stock')
+            bot.rename_file(stock_file_name,'Stock Romania')
+
 
     def run_stock_and_kpi(self):
         with Frs(tear_down=True) as bot:
@@ -75,7 +76,7 @@ class Run:
             bot.choose_export_type()
             bot.click_ok_button()
             stock_file_name = bot.get_file_name()
-            bot.rename_file(stock_file_name, 'Stock')
+            bot.rename_file(stock_file_name, 'Stock Romania')
             bot.rename_file(kpi_file_name, 'KPI')
 
     def run_bom_file(self,serial_number):
@@ -92,9 +93,5 @@ class Run:
             stock_file_name = bot.get_file_name()
             bot.rename_file(stock_file_name,serial_number)
 
-
-
-
-
-
-
+run = Run()
+run.run_kpi()

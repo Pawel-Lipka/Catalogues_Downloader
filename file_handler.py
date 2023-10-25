@@ -1,5 +1,6 @@
 import time
 import os
+import shutil
 
 class File_handler():
 
@@ -42,7 +43,8 @@ class File_handler():
             return "can't rename - file don't exist"
 
 
-
+    def move_file(self,path_from,path_to):
+        shutil.move(path_from,path_to)
 
 
 
