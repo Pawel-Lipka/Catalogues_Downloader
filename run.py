@@ -92,6 +92,3 @@ class Run:
             bot.click_ok_button()
             stock_file_name = bot.get_file_name()
             bot.rename_file(stock_file_name,serial_number)
-
-run = Run()
-run.run_kpi()
