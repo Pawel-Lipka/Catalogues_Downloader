@@ -1,11 +1,6 @@
 # Catalogues_Downloader
-Software to automatic dowload catalogues from Figoshop based on SN number
+Scripts to get data from site
 
-
-Project assumptions:
-
-- Python language
+- Python
 - Selenium
-- unittest
-- safe password storage
-- interface (streamlit)
+
