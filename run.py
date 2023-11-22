@@ -1,6 +1,6 @@
 #!.\venv\Scripts\python.exe
-from frigoshop import Frigoshop
-from frs import Frs
+from frigoshop_page import Frigoshop
+from frs_page import Frs
 from selenium.common.exceptions import NoSuchWindowException,NoSuchElementException,TimeoutException
 
 
@@ -34,7 +34,7 @@ class Run:
         with Frs(tear_down=True) as bot:
             bot.load_frs_ro_page()
             bot.log_in()
-            bot.open_kpi_download_page()
+            bot.open_orders_download_page()
             bot.click_submit_button()
             bot.click_print_button()
             bot.switch_to_export_report_window()
@@ -62,7 +62,7 @@ class Run:
             bot.load_frs_ro_page()
             bot.log_in()
             bot.open_stock_download_page()
-            bot.open_kpi_download_page()
+            bot.open_orders_download_page()
             bot.click_submit_button()
             bot.click_print_button()
             bot.switch_tabs(2)

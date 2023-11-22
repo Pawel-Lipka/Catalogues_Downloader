@@ -1,10 +1,9 @@
-from frs import Frs
-from selenium.common.exceptions import NoSuchWindowException,NoSuchElementException,TimeoutException
+from frs_page import Frs
 
 with Frs(tear_down=True) as bot:
     bot.load_frs_ro_page()
     bot.log_in()
-    bot.open_kpi_download_page()
+    bot.open_orders_download_page()
     bot.click_submit_button()
     bot.click_print_button()
     bot.switch_to_export_report_window()

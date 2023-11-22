@@ -1,33 +1,14 @@
 import time
 import constants as const
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver import ActionChains
 from file_handler import File_handler
-class Frigoshop(File_handler):
+import settings
 
+class Frigoshop(settings.Settings, File_handler):
 
-    def __init__(self,driver_path=const.PATH,tear_down=False,page_load_strategy = 'eager',sn='RO5811948533'):
-        caps = DesiredCapabilities().CHROME
-        caps['pageLoadStrategy'] = page_load_strategy
-        self.driver = webdriver.Chrome(ChromeDriverManager().install(),desired_capabilities=caps)
-        self.tear_down = tear_down
-        self.driver.implicitly_wait(10)
-        self.driver.minimize_window()
-        self.sn = sn
-        self.action = ActionChains(self.driver)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.tear_down:
-            self.driver.quit()
 
     def load_frigoshop_login_page(self):
         self.driver.get(const.FRIGO_SHOP_LOGIN_PAGE)
@@ -37,7 +18,6 @@ class Frigoshop(File_handler):
             EC.element_to_be_clickable((By.XPATH,"//span[.='OK']"))
         )
         ok_button.click()
-
 
     def log_in_to_frigoshop(self,user=const.USER_FRG_SHOP,password=const.PASSSWORD_FRG_SHOP):
         time.sleep(2)
@@ -49,14 +29,12 @@ class Frigoshop(File_handler):
         time.sleep(2)
         login_password_fields[1].send_keys(Keys.RETURN)
 
-
     def switch_to_select_device_frame(self):
         WebDriverWait(self.driver,10).until(EC.frame_to_be_available_and_switch_to_it('shopMain'))
 
-
-    def serial_number_input(self,):
+    def serial_number_input(self,sn):
         search_field = self.driver.find_element_by_class_name('guitextfield')
-        search_field.send_keys(self.sn)
+        search_field.send_keys(sn)
         search_field.send_keys(Keys.RETURN)
 
     def select_first_positon(self):
@@ -81,7 +59,6 @@ class Frigoshop(File_handler):
         save_button = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//span[.='Save']"))  # wait until save buton can be click
         )
-
         save_button.click()  # click save button
 
     def log_out(self):
@@ -98,7 +75,6 @@ class Frigoshop(File_handler):
 
     def rename_file(self,file_name,new_name):
         File_handler.file_rename(self,file_name,new_name)
-
 
 
 

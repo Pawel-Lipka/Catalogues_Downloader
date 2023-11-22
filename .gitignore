@@ -3,3 +3,4 @@ __pycache__
 test.py
 interface - streamlit(work in progress).py
 .ipynb
+constants.py
