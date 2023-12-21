@@ -2,7 +2,7 @@ import time
 import os
 import shutil
 
-class File_handler():
+class File():
 
     # method to get the downloaded file name
     def getDownLoadedFileName(self, waitTime,driver):

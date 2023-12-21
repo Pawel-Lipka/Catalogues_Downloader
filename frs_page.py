@@ -1,10 +1,10 @@
 import settings
 import constants as const
-import frigoshop_page
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from file import File
 
 class Frs(settings.Settings):
 
@@ -36,10 +36,6 @@ class Frs(settings.Settings):
             '''window.open("http://192.168.44.49/reportengine/rengine.aspx?ReportID=FG.CSR902&action=page");''')
         self.driver.switch_to.window(self.driver.window_handles[1])
 
-    # fill in what from warehouse You want to download open orders. Need to be on open orders window
-    def fill_in_open_orders_download_form(self, warehouse_number='025SCH'):
-        from_warehouse_textbox = self.driver.find_element_by_id('WarehouseFrom')
-        from_warehouse_textbox.send_keys(warehouse_number)
 
     # fill in what serial number You want to download. Need to be on BOM download window
     def fill_in_bom_download_form(self,serial_number):
@@ -71,13 +67,15 @@ class Frs(settings.Settings):
 
     # wait to downloading parameter page is open and switch to it
     def switch_to_export_report_window(self):
-        WebDriverWait(self.driver, 20).until(
-            EC.new_window_is_opened(self.driver.window_handles))
+        WebDriverWait(self.driver, 10).until(
+            EC.new_window_is_opened)
         self.driver.switch_to.window(self.driver.window_handles[-1])
+        WebDriverWait(EC.title_is("Export the Report"),10)
 
     # Choose in what format report will be download
     def choose_export_type(self,select_from_list='RecordToMSExcel'):
         #chose from  list default: MS Excel 97-2000 (Data Only)
+
         select_list = Select(self.driver.find_element_by_id('exportFormatList'))
         select_list.select_by_value(select_from_list)
 
@@ -89,7 +87,5 @@ class Frs(settings.Settings):
 
     def switch_tabs(self,window_number):
         self.driver.switch_to_window(self.driver.window_handles[window_number])
-
-
 
 

@@ -4,10 +4,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from file_handler import File_handler
+from file import File
 import settings
 
-class Frigoshop(settings.Settings, File_handler):
+class Frigoshop(settings.Settings, File):
 
 
     def load_frigoshop_login_page(self):
@@ -69,12 +69,14 @@ class Frigoshop(settings.Settings, File_handler):
             EC.element_to_be_clickable((By.XPATH, "//span[.='Yes']"))  # wait until yes button can be click
         )
         yes_button.click()
+
+        #TODO remove below functions, it's enough to have them in file.py; Before remove check for usage.
     def get_file_name(self):
-        file_name = File_handler.getDownLoadedFileName(self,220,self.driver)
+        file_name = File.getDownLoadedFileName(self, 220, self.driver)
         return file_name
 
     def rename_file(self,file_name,new_name):
-        File_handler.file_rename(self,file_name,new_name)
+        File.file_rename(self, file_name, new_name)
 
 
 
